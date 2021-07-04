@@ -10,12 +10,7 @@ pipeline {
 		pollSCM '* * * * *'
 	}	
     stages {
-		stage('Git Fetch') {
-            steps {
-                git 'https://github.com/gourav-bhardwaj/sp-jenkins-demo.git'
-            }
-        }
-        stage('Build') {
+		stage('Build') {
             steps {
                 sh './gradlew assemble'
             }
