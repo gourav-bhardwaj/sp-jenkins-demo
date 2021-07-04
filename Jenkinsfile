@@ -6,9 +6,6 @@ pipeline {
 		dockerImageLatest = ''
 	}
     agent any
-	triggers {
-		cron('* * * * *')
-	}	
     stages {
 		stage('Build') {
             steps {
