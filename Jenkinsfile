@@ -8,13 +8,19 @@ pipeline {
     agent any
     stages {
 		stage('Build') {
+			agent {
+				docker 'gradle:7.1.1-jdk8'
+			}
             steps {
-                sh './gradlew assemble'
+                sh 'gradle assemble'
             }
         }
         stage('Test') {
+			agent {
+				docker 'gradle:7.1.1-jdk8'
+			}
             steps {
-                sh './gradlew test'
+                sh 'gradle test'
             }
         }
 		stage('Docker Image Build') {
