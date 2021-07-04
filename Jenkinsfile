@@ -6,8 +6,8 @@ pipeline {
 		dockerImageLatest = ''
 	}
     agent any
-	trigger {
-		pollSCM '* * * * *'
+	triggers {
+		cron('* * * * *')
 	}	
     stages {
 		stage('Build') {
