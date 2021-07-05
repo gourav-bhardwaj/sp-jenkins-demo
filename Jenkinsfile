@@ -19,9 +19,8 @@ pipeline {
         }
 		stage('Docker Image Build') {
             steps {
-                script {
-					dockerImage = docker.build registry
-				}
+                sh "docker build -t $registry:$BUILD_NUMBER"
+				sh "docker build -t $registry:latest"
             }
         }
 		stage('Docker Publish') {
