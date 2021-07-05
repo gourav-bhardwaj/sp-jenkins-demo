@@ -3,7 +3,6 @@ pipeline {
 		registry = "gourav-bhardwaj/sp-jenkins-demo"
 		registryCredential = 'DOCKER_CRED'
 		dockerImage = ''
-		dockerImageLatest = ''
 	}
     agent any
     stages {
@@ -21,10 +20,7 @@ pipeline {
 		stage('Docker Image Build') {
             steps {
                 script {
-					dockerImage = docker.build registry ":$BUILD_NUMBER"
-				}
-				script {
-					dockerImageLatest = docker.build registry ":latest"
+					dockerImage = docker.build registry
 				}
             }
         }
@@ -32,11 +28,17 @@ pipeline {
             steps {
 				script {
 					docker.withRegistry('', registryCredential) {
-						dockerImage.push()
-						dockerImageLatest.push()
+						dockerImage.push(":$BUILD_NUMBER")
+						dockerImage.push('latest')
 					}
 				}
             }
         }
+		stage('Remove Unused docker image') {
+			steps{
+				sh "docker rmi $registry:$BUILD_NUMBER"
+				sh "docker rmi $registry:latest"
+			}
+		}
     }
 }
