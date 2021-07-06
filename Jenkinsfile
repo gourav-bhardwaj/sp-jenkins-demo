@@ -1,9 +1,9 @@
 pipeline {
+	agent any
 	environment {
 		REGISTRY = 'gourav-bhardwaj/sp-jenkins-demo'
 		DOCKER_CRED = 'DOCKER_CRED'
 	}
-	agent { label "linux" }
 	stages {
 		stage("Build") {
 			steps {
