@@ -19,8 +19,8 @@ pipeline {
 		stage("Docker Build") {
 			steps {
 				sh """
-					docker build -t $REGISTRY:$BUILD_NUMBER
-					docker build -t $REGISTRY:latest
+					docker build -t $REGISTRY:$BUILD_NUMBER .
+					docker build -t $REGISTRY:latest .
 				"""
 			}
 		}
