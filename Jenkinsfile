@@ -19,8 +19,7 @@ pipeline {
         }
 		stage('Docker Image Build') {
             steps {
-                sh "docker build -t $registry:$BUILD_NUMBER"
-				sh "docker build -t $registry:latest"
+                dockerImage = docker.build registry
             }
         }
 		stage('Docker Publish') {
@@ -33,6 +32,11 @@ pipeline {
 				}
             }
         }
-		
+		stage('Remove Unused docker image') {
+			steps{
+				sh "docker rmi $registry:$BUILD_NUMBER"
+				sh "docker rmi $registry:latest"
+			}
+		}
     }
 }
