@@ -1,8 +1,9 @@
 pipeline {
 	agent any
 	environment {
-		REGISTRY = 'gourav-bhardwaj/sp-jenkins-demo'
-		DOCKER_CRED = 'DOCKER_CRED'
+		registry = 'gourav-bhardwaj/sp-jenkins-demo'
+		registryCredentials = 'DOCKER_CRED'
+		dockerImage = ''
 	}
 	stages {
 		stage("Build") {
@@ -24,15 +25,21 @@ pipeline {
 				"""
 			}
 		}
+		stage("Docker Build") {
+			steps {
+				script {
+					dockerImage = docker.build registry
+				}
+			}
+		}
 		stage("Docker Push") {
 			steps {
-				sh """
-					docker login -u $DOCKER_CRED_USR -p $DOCKER_CRED_PSW
-					docker push $REGISTRY:$BUILD_NUMBER
-					docker push $REGISTRY:latest
-					docker rmi $REGISTRY:$BUILD_NUMBER
-					docker rmi $REGISTRY:latest
-				"""
+				script {
+					docker.withRegistry('', registryCredentials) {
+						dockerImage.push("$BUILD_NUMBER")
+						dockerImage.push("latest")
+					}
+				}
 			}
 		}
 	}
