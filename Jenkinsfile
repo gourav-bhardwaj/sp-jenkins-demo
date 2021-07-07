@@ -1,17 +1,25 @@
 pipeline {
+	environment {
+		registry = 'gourav-bhardwaj/sp-jenkins-demo'
+		registryCredentials = 'DOCKER_CRED'
+		dockerImage = ''
+	}
 	agent any
 	stages {
-		stage("Build") {
+		stage("Docker Build") {
 			steps {
-				withGradle {
-					sh './gradlew build'
+				script {
+					dockerImage = docker.build registry
 				}
 			}
 		}
-		stage("Test") {
+		stage("Docker Push") {
 			steps {
-				withGradle {
-					sh "./gradlew test"
+				script {
+					docker.withRegistry('', registryCredentials) {
+						docker.push("$BUILD_NUMBER")
+						docker.push("latest")
+					}
 				}
 			}
 		}
